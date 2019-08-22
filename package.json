@@ -1,0 +1,14 @@
+{
+  "name": "game-of-life",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:aitorfernandez/game-of-life.git",
+  "author": "Aitor Fernandez <aitor@qad.re>",
+  "license": "MIT",
+  "scripts": {
+    "dist": "./node_modules/uglify-js/bin/uglifyjs sketch.js -o game-of-life.min.js --compress"
+  },
+  "devDependencies": {
+    "uglify-js": "^3.6.0"
+  }
+}
