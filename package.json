@@ -5,7 +5,7 @@
   "author": "Aitor Fernandez <helloimaitor@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dist": "./node_modules/uglify-js/bin/uglifyjs sketch.js -o game-of-life.min.js --compress"
+    "build": "./node_modules/uglify-js/bin/uglifyjs sketch.js -o game-of-life.min.js --compress"
   },
   "devDependencies": {
     "uglify-js": "^3.6.0"
