@@ -1,1 +1,6 @@
-console.log('game-of-life')
+function backgroundA(p) {
+  p.setup = () => {
+    p.background('red')
+    p.noLoop()
+  }
+}
