@@ -1,8 +1,9 @@
 *.log
-*.min.js
 *.swo
 *.swp
 .DS_Store
 .tags
+dist
 kko
 node_modules
+sketch.js
