@@ -1,7 +1,7 @@
 export default {
   input: 'index.js',
   output: {
-    file: 'dist/game-of-life.js',
+    file: 'dist/main.js',
     format: 'iife',
     name: 'sketch',
     sourcemap: 'inline'
