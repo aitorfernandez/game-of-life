@@ -81,6 +81,9 @@ export default (p) => {
     p.resizeCanvas(getWidth(), getHeight())
   }
 
+  p.play = play
+  p.stop = stop
+
   p.setup = setup
   p.draw = draw
   p.windowResized = windowResized
