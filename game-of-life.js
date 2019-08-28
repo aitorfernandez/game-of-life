@@ -39,10 +39,15 @@ export default (p) => {
     Array(columns), () => Array(rows).fill(0)
   )
 
-  p.props = () => {
+  function play() {
+    console.log('play')
   }
 
-  p.setup = () => {
+  function stop() {
+    console.log('stop')
+  }
+
+  function setup() {
     p.createCanvas(getWidth(), getHeight())
     p.background(255)
     p.noLoop()
@@ -55,7 +60,7 @@ export default (p) => {
     }
   }
 
-  p.draw = () => {
+  function draw() {
     for (let column = 0; column < columns; column += 1) {
       for (let row = 0; row < rows; row += 1) {
         if (board[column][row]) {
@@ -71,8 +76,12 @@ export default (p) => {
     }
   }
 
-  p.windowResized = () => {
+  function windowResized() {
     // TODO: don't forget this
     p.resizeCanvas(getWidth(), getHeight())
   }
+
+  p.setup = setup
+  p.draw = draw
+  p.windowResized = windowResized
 }
