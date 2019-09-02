@@ -3,7 +3,7 @@ export default {
   output: {
     file: 'dist/main.js',
     format: 'iife',
-    name: 'game-of-life',
+    name: 'game_of_life',
     sourcemap: 'inline'
   },
   watch: {

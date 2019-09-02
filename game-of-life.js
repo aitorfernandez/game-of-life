@@ -1,84 +1,123 @@
 export default (p) => {
-  const size = 72
+  const resolution = 20
 
-  function getWidth() {
-    return p.windowWidth - size
+  const width = 1020 + resolution
+  const height = 760 + resolution
+
+  let grid
+  let cols
+  let rows
+
+  let update = true
+
+  function createCell(x, y, state) {
+    const color = state ? 'black' : 'white'
+    const pos = p.createVector(x * resolution, y * resolution)
+
+    function draw() {
+      p.noStroke()
+      p.fill(color)
+      p.circle(pos.x + (resolution / 2), pos.y + (resolution / 2), resolution)
+    }
+
+    return {
+      draw,
+      state
+    }
   }
 
-  function getHeight() {
-    return p.windowHeight - size
-  }
-
-  function drawRect(column, row) {
-    p.noStroke()
-    p.fill(235)
-
-    const padding = size / 6
-
-    p.rect(
-      (column * size) + (padding / 2), (row * size) + (padding / 2), size - padding, size - padding
+  function make2dArray() {
+    return Array.from(
+      Array(cols), () => Array(rows)
     )
   }
 
-  function drawLines(column, row) {
-    p.strokeWeight(1)
-    p.stroke(205)
+  function countNeighbours(grid, x, y) {
+    let sum = 0
 
-    const center = p.createVector(
-      column * size, row * size
-    )
+    for (let i = -1; i < 2; i += 1) {
+      for (let j = -1; j < 2; j += 1) {
+        let col = (x + i + cols) % cols
+        let row = (y + j + rows) % rows
 
-    p.line(center.x - (size / 12), center.y, center.x + (size / 12), center.y)
-    p.line(center.x, center.y - (size / 12), center.x, center.y + (size / 12))
+        sum += grid[col][row].state
+      }
+    }
+
+    sum -= grid[x][y].state
+    return sum
   }
-
-  const columns = Math.floor(getWidth() / size)
-  const rows = Math.floor(getHeight() / size)
-
-  const board = Array.from(
-    Array(columns), () => Array(rows).fill(0)
-  )
 
   function play() {
-    console.log('play')
+    p.loop()
   }
 
   function stop() {
-    console.log('stop')
+    p.noLoop()
   }
 
   function setup() {
-    p.createCanvas(getWidth(), getHeight())
-    p.background(255)
-    p.noLoop()
-    // p.frameRate(1)
+    p.createCanvas(width, height)
+    p.frameRate(6)
 
-    for (let column = 0; column < columns; column += 1) {
-      for (let row = 0; row < rows; row += 1) {
-        board[column][row] = Math.floor(p.random(2))
+    cols = p.int(p.width / resolution)
+    rows = p.int(p.height / resolution)
+
+    grid = make2dArray()
+
+    for (let i = 0; i < cols; i += 1) {
+      for (let j = 0; j < rows; j += 1) {
+        grid[i][j] = createCell(i, j, p.floor(p.random(2)))
       }
     }
   }
 
   function draw() {
-    for (let column = 0; column < columns; column += 1) {
-      for (let row = 0; row < rows; row += 1) {
-        if (board[column][row]) {
-          drawRect(column, row)
-        }
-        if (
-          column > 0
-          && row > 0
-        ) {
-          drawLines(column, row)
+    p.background('whiteSmoke')
+
+    for (let i = 0; i < cols; i += 1) {
+      for (let j = 0; j < rows; j += 1) {
+        grid[i][j].draw()
+      }
+    }
+
+    // generate next grid
+    let next = make2dArray(cols, rows)
+
+    for (let i = 0; i < cols; i += 1) {
+      for (let j = 0; j < rows; j += 1) {
+        const state = grid[i][j].state
+
+        const neighbours = countNeighbours(grid, i, j)
+
+        // rules https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules
+
+        // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+        if (state === 1 && neighbours < 2) {
+          next[i][j] = createCell(i, j, 0)
+
+        // Any live cell with two or three live neighbours lives on to the next generation.
+        } else if (state === 1 && (neighbours === 2 || neighbours === 3)) {
+          next[i][j] = createCell(i, j, 1)
+
+        // Any live cell with more than three live neighbours dies, as if by overpopulation.
+        } else if (state === 1 && neighbours > 3) {
+          next[i][j] = createCell(i, j, 0)
+
+        // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+        }  else if (state === 0 && neighbours === 3) {
+          next[i][j] = createCell(i, j, 1)
+        } else {
+          next[i][j] = createCell(i, j, state)
         }
       }
     }
+
+    grid = next
   }
 
   function windowResized() {
-    // TODO: don't forget this
-    p.resizeCanvas(getWidth(), getHeight())
+    // ...
   }
 
   p.play = play
