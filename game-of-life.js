@@ -1,23 +1,25 @@
 export default (p) => {
-  const resolution = 20
+  const resolution = 30
 
   const width = 1020 + resolution
-  const height = 760 + resolution
+  const height = 640 + resolution
 
   let grid
   let cols
   let rows
 
-  let update = true
-
   function createCell(x, y, state) {
-    const color = state ? 'black' : 'white'
+    const color = state ? p.color(`rgba(0, 0, 0, 1)`) : p.color(`rgba(255, 255, 255, 1)`)
     const pos = p.createVector(x * resolution, y * resolution)
 
     function draw() {
       p.noStroke()
+
       p.fill(color)
-      p.circle(pos.x + (resolution / 2), pos.y + (resolution / 2), resolution)
+      p.smooth()
+
+      const offset = resolution / 2
+      p.circle(pos.x + offset, pos.y + offset, offset)
     }
 
     return {
@@ -56,10 +58,7 @@ export default (p) => {
     p.noLoop()
   }
 
-  function setup() {
-    p.createCanvas(width, height)
-    p.frameRate(6)
-
+  function reset() {
     cols = p.int(p.width / resolution)
     rows = p.int(p.height / resolution)
 
@@ -70,6 +69,12 @@ export default (p) => {
         grid[i][j] = createCell(i, j, p.floor(p.random(2)))
       }
     }
+  }
+
+  function setup() {
+    p.createCanvas(width, height)
+    p.frameRate(3)
+    reset()
   }
 
   function draw() {
@@ -122,6 +127,8 @@ export default (p) => {
 
   p.play = play
   p.stop = stop
+
+  p.reset = reset
 
   p.setup = setup
   p.draw = draw
