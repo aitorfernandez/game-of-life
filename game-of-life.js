@@ -29,7 +29,7 @@ export default (p) => {
 
     function draw() {
       const opacity = 1 - (((deaths < 0 ? 0 : deaths > 100 ? 100 : deaths) / 100) * 2.4)
-      const color = state ? colors[p.floor(p.random() * colors.length)] : p.color(`rgba(245, 245, 245, ${opacity})`)
+      const color = state ? p.random(colors) : p.color(`rgba(245, 245, 245, ${opacity})`)
 
       p.noStroke()
 
