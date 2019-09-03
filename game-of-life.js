@@ -1,19 +1,40 @@
 export default (p) => {
-  const resolution = 60
+  const resolution = 24
 
-  const width = 1020 + resolution
-  const height = 640 + resolution
+  const width = p.windowWidth
+  const height = p.windowHeight
 
   let grid
   let cols
   let rows
 
+  const colors = [
+    '#878787',
+    '#444444',
+    '#969696',
+    '#9e9e9e',
+    '#8c8c8c',
+    '#636363',
+    '#aaaaaa',
+    '#878787',
+    '#727272',
+    '#cccccc',
+    '#686868',
+    '#999999',
+    '#666666',
+    '#333333',
+    '#a5a5a5',
+    '#8e8e8e',
+    '#515151',
+    '#232323'
+  ]
+
   function createCell(x, y, state, deaths) {
     const pos = p.createVector(x * resolution, y * resolution)
 
     function draw() {
-      const opacity = 1 - (((deaths < 0 ? 0 : deaths > 100 ? 100 : deaths) / 100) * 2.5)
-      const color = state ? p.color(`rgba(0, 0, 0, ${opacity})`) : p.color(`rgba(245, 245, 245, ${opacity})`)
+      const opacity = 1 - (((deaths < 0 ? 0 : deaths > 100 ? 100 : deaths) / 100) * 2.4)
+      const color = state ? colors[p.floor(p.random() * colors.length)] : p.color(`rgba(245, 245, 245, ${opacity})`)
 
       p.noStroke()
 
@@ -22,12 +43,12 @@ export default (p) => {
 
       const offset = resolution / 2
 
-      let radius = opacity * 25
+      let radius = resolution - (opacity * 24)
       if (radius < 0) {
-        radius = radius * -1
+        radius *= -1
       }
 
-      p.circle(pos.x + offset, pos.y + offset, radius > 60 ? offset : radius)
+      p.circle(pos.x + offset, pos.y + offset, radius > resolution ? offset : radius)
     }
 
     return {
@@ -48,8 +69,8 @@ export default (p) => {
 
     for (let i = -1; i < 2; i += 1) {
       for (let j = -1; j < 2; j += 1) {
-        let col = (x + i + cols) % cols
-        let row = (y + j + rows) % rows
+        const col = (x + i + cols) % cols
+        const row = (y + j + rows) % rows
 
         sum += grid[col][row].state
       }
@@ -82,8 +103,8 @@ export default (p) => {
   }
 
   function setup() {
-    p.createCanvas(width, height)
-    p.frameRate(6)
+    p.createCanvas(width - (resolution * 2), height - (resolution * 2))
+    p.frameRate(3)
     reset()
   }
 
@@ -97,7 +118,7 @@ export default (p) => {
     }
 
     // generate next grid
-    let next = make2dArray(cols, rows)
+    const next = make2dArray(cols, rows)
 
     for (let i = 0; i < cols; i += 1) {
       for (let j = 0; j < rows; j += 1) {
@@ -123,7 +144,7 @@ export default (p) => {
           next[i][j] = createCell(i, j, 0, deaths + 1)
 
         // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-        }  else if (state === 0 && neighbours === 3) {
+        } else if (state === 0 && neighbours === 3) {
           next[i][j] = createCell(i, j, 1, deaths - 1)
         } else {
           next[i][j] = createCell(i, j, state, state ? deaths - 1 : deaths + 1)
