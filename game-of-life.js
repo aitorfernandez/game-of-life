@@ -1,9 +1,6 @@
 export default (p) => {
   const resolution = 24
 
-  const width = p.windowWidth
-  const height = p.windowHeight
-
   let grid
   let cols
   let rows
@@ -103,7 +100,9 @@ export default (p) => {
   }
 
   function setup() {
-    p.createCanvas(width - (resolution * 2), height - (resolution * 2))
+    p.createCanvas(
+      p.windowWidth - resolution, p.windowHeight - resolution
+    )
     p.frameRate(3)
     reset()
   }
