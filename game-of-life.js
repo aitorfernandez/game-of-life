@@ -1,10 +1,6 @@
 export default (p) => {
   const resolution = 24
 
-  let grid
-  let cols
-  let rows
-
   const colors = [
     '#878787',
     '#444444',
@@ -25,6 +21,8 @@ export default (p) => {
     '#515151',
     '#232323'
   ]
+
+  let grid, cols, rows
 
   function createCell(x, y, state, deaths) {
     const pos = p.createVector(x * resolution, y * resolution)
