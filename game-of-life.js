@@ -21,11 +21,11 @@ export default (p) => {
     '#878787', '#444444', '#969696', '#9e9e9e', '#8c8c8c', '#636363', '#aaaaaa', '#878787', '#727272', '#cccccc', '#686868', '#999999', '#666666', '#333333', '#a5a5a5', '#8e8e8e', '#515151', '#232323'
   ]
 
-  const hue = p.random([
+  const colors = [
     red, orange, blue, purple, monochrome
-  ])
+  ]
 
-  let grid, cols, rows
+  let grid, cols, rows, hue
 
   function createCell(x, y, state, deaths) {
     const pos = p.createVector(x * resolution, y * resolution)
@@ -87,6 +87,8 @@ export default (p) => {
   }
 
   function reset() {
+    hue = p.random(colors)
+
     cols = p.int(p.width / resolution)
     rows = p.int(p.height / resolution)
 
